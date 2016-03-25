@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+		<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        <title>New Web Project</title>
+    </head>
+    <body>
+        <div id="home" data-role="page">
+        	<div data-role="panel" id="navpanel1" data-display="overlay">
+    			<ul data-role="listview">
+    				<li><a href="#">Home</a></li>
+    				<li><a href="#education">Education</a></li>
+    				<li><a href="#activities">Activities</a></li>
+    				<li><a href="#contact">Contact</a></li>
+    			</ul>        			
+			</div>         	
+        	<div data-role="header">
+        		<a href="#navpanel1">Navigation</a> <h1 align="center">My Home Page Header</h1>
+        	</div>
+        	<div role="main" class="ui-content">
+        		<table width="100%">
+        			<tr>
+        				<td width="70%">
+        					The buttons are, by default, as wide as its content. Use an unordered list to divide the buttons equally: 1 button takes 100% of the width, 2 buttons share 50% each, 3 buttons 33,3%, etc. However, if you specify more than 5 buttons in the navbar, it will wrap to multiple lines (see "More Examples" below).
+        				</td>
+        				<td width="30%" valign="top" align="right"><img width="128px" height="128px" src="https://pbs.twimg.com/profile_images/638751551457103872/KN-NzuRl.png" /></td>
+        			</tr>
+        		</table>
+        	</div>
+        	<div data-role="footer">
+        		My Home Page Footer
+        	</div>
+        </div>
+        <div id="education" data-role="page">
+        	<div data-role="panel" id="navpanel2" data-display="overlay">
+    			<ul data-role="listview">
+    				<li><a href="#">Education</a></li>
+    				<li><a href="#home">Home</a></li>
+    				<li><a href="#activities">Activities</a></li>
+    				<li><a href="#contact">Contact</a></li>
+    			</ul>        			
+			</div>        	
+        	<div data-role="header">
+        		<a href="#navpanel2">Navigation</a> <h1 align="center">My Education Page Header</h1>
+        	</div>
+        	<div role="main" class="ui-content">
+        		My Education Page Content
+        	</div>
+        	<div data-role="footer">
+        		My Education Page Footer
+        	</div>
+        </div>
+        <div id="activities" data-role="page">
+        	<div data-role="panel" id="navpanel3" data-display="overlay">
+    			<ul data-role="listview">
+    				<li><a href="#">Activities</a></li>
+    				<li><a href="#home">Home</a></li>    				
+    				<li><a href="#education">Education</a></li>
+    				<li><a href="#contact">Contact</a></li>
+    			</ul>        			
+			</div>         	
+        	<div data-role="header">
+        		<a href="#navpanel3">Navigation</a> <h1 align="center">My Activities Page Header</h1>
+        	</div>
+        	<div role="main" class="ui-content">
+        		My Activities Page Content
+        	</div>
+        	<div data-role="footer">
+        		My Activities Page Footer
+        	</div>
+        </div>
+        <div id="contact" data-role="page">
+        	<div data-role="panel" id="navpanel4" data-display="overlay">
+    			<ul data-role="listview">
+    				<li><a href="#">Contact</a></li>    				
+    				<li><a href="#home">Home</a></li>
+    				<li><a href="#education">Education</a></li>
+    				<li><a href="#activities">Activities</a></li>
+    			</ul>        			
+			</div>         	
+        	<div data-role="header">
+        		<a href="#navpanel4">Navigation</a> <h1 align="center">My Contact Page Header</h1>
+        	</div>
+        	<div role="main" class="ui-content">
+        		My Contact Page Content
+        	</div>
+        	<div data-role="footer">
+        		My Contact Page Footer
+        	</div>
+        </div>
+    </body>
+</html>

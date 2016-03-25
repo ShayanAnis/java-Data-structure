@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    	<link rel="stylesheet" href="themes/theme123.min.css" />
+<link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+		<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        <title>New Web Project</title>
+        
+      <script type="text/javascript">
+      
+      // Store object
+		var selObject = {timestamp: null, todo : null};
+		
+         //prefixes of implementation that we want to test
+         window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+         
+         //prefixes of window.IDB objects
+         window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
+         window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+         
+         if (!window.indexedDB) {
+            window.alert("Your browser doesn't support a stable version of IndexedDB.");
+         }
+         
+         var db;
+         var request = window.indexedDB.open("tododb", 1);
+         
+         request.onerror = function(event) {
+            console.log("error: ");
+         };
+         
+         request.onsuccess = function(event) {
+            db = request.result;
+            console.log("success: "+ db);
+         };
+         
+         request.onupgradeneeded = function(event) {
+            var db = event.target.result;
+            var objectStore = db.createObjectStore("todostore", {keyPath: "timestamp"});         
+         };
+         
+         function readAll() {
+            var objectStore = db.transaction("todostore").objectStore("todostore");
+            $("#todos").empty();
+            objectStore.openCursor().onsuccess = function(event) {
+               var cursor = event.target.result;
+               if (cursor) {
+               	  $("#todos").append("<tr><td>" + cursor.key + "</td><td>" + cursor.value.todo + "</td><td><button onclick=\"update(" + cursor.key + ",'" + cursor.value.todo + "')\">Update</button></td><td><button onclick=\"removetodo(" + cursor.key + ",'" + cursor.value.todo + "')\">Delete</button></td></tr>");
+                  cursor.continue();
+               }
+            };
+         };
+         
+         function add() {
+         	//alert($("#todo").val());
+            var request = db.transaction(["todostore"], "readwrite")
+            .objectStore("todostore")
+            .put({ timestamp: (new Date()).getTime(), todo: $("#todo").val()});
+            
+            request.onsuccess = function(event) {
+               alert($("#todo").val() + " has been added to your database.");
+               $("#todo").val("");
+            };
+            
+            request.onerror = function(event) {
+               alert("Unable to add data\r\n" + $("#todo").val() + " is aready exist in your database! ");
+            };
+         };
+
+         function updatetodo() {
+         	//alert($("#todo").val());
+            var request = db.transaction(["todostore"], "readwrite")
+            .objectStore("todostore")
+            .put({ timestamp: $("#timestamp2").val(), todo: $("#todo2").val()});
+            
+            request.onsuccess = function(event) {
+               alert($("#todo2").val() + " has been updated to your database.");
+               $("#todo2").val("");
+               $("#timestamp2").val("");
+               $.mobile.navigate("#view");
+            };
+            
+            request.onerror = function(event) {
+               alert("Unable to update data\r\n" + $("#todo").val());
+            };
+         };
+         
+         function update(timestamp, todo) {
+         	selObject.timestamp = timestamp;
+         	selObject.todo = todo;
+         	$.mobile.navigate("#update");
+         }
+                  
+         function removetodo(timestamp, todo) {		
+			//alert(timestamp);
+            var request = db.transaction(["todostore"], "readwrite")
+            .objectStore("todostore")
+            .delete(timestamp);
+            
+            request.onsuccess = function(event) {
+               alert(todo + " has been removed from your database.");
+               readAll();
+            };
+
+	    	request.onerror = function(event) {
+               alert(event);
+           };
+         };
+         
+		$(document).on("pageshow","#view",function(){
+		  readAll();
+		});		   
+		
+		$(document).on("pageshow","#update",function() {
+			$("#timestamp2").val(selObject.timestamp);
+			$("#todo2").val(selObject.todo);
+		});
+			
+      </script>        
+    </head>
+    <body>
+    	
+        <div id="home" data-role="page">
+        	<div data-role="panel" id="navpanel1" data-display="overlay">
+    			<ul data-role="listview">
+    				<li><a href="#home">Home</a></li>
+    				<li><a href="#view">View</a></li>
+    				<li><a href="#add">Add</a></li>
+    			</ul>        			
+			</div>         	
+        	<div data-role="header">
+        		<a href="#navpanel1">Application Menu</a> <h1 align="center">My To Do Application</h1>
+        	</div>
+        	<div role="main" class="ui-content">
+				My To Do appication build for testing purpose only. 
+        	</div>
+        	<div data-role="footer">
+        		<h1 align="center">IU All Rights Reserved 2016</h1>
+        	</div>
+        </div>
+        <div id="view" data-role="page">
+        	<div data-role="panel" id="navpanel2" data-display="overlay">
+    			<ul data-role="listview">
+    				<li><a href="#home">Home</a></li>
+    				<li><a href="#view">View</a></li>
+    				<li><a href="#add">Add</a></li>
+    			</ul>        			
+			</div>         	
+        	<div data-role="header">
+        		<a href="#navpanel2">Application Menu</a> <h1 align="center">My To Do Application</h1>
+        	</div>
+        	<div role="main" class="ui-content">
+				<table data-role="table" id="todoview" data-mode="columntoggle" class="ui-body-d ui-shadow table-stripe ui-responsive" data-column-btn-theme="b" data-column-btn-text="Columns to display..." data-column-popup-theme="a">
+				         <thead>
+				           <tr class="ui-bar-d">
+				             <th data-priority="2">Timestamp</th>
+				             <th data-priority="1">To Do</th>
+				             <th data-priority="3">Update</th>
+				             <th data-priority="4">Delete</th>
+				           </tr>
+				         </thead>
+				         <tbody id="todos">
+				         </tbody>
+				</table>							
+        	</div>
+        	<div data-role="footer">
+        		<h1 align="center">IU All Rights Reserved 2016</h1>
+        	</div>
+        </div>
+        <div id="add" data-role="page">
+        	<div data-role="panel" id="navpanel3" data-display="overlay">
+    			<ul data-role="listview">
+    				<li><a href="#home">Home</a></li>
+    				<li><a href="#view">View</a></li>
+    				<li><a href="#add">Add</a></li>
+    			</ul>        			
+			</div>         	
+        	<div data-role="header">
+        		<a href="#navpanel3">Application Menu</a> <h1 align="center">My To Do Application</h1>
+        	</div>
+        	<div role="main" class="ui-content">
+				<label for="todo">To Do:</label>
+				<input id="todo" type="text">
+				<button class="ui-shadow ui-btn ui-corner-all" onclick="add()">Add</button>
+        	</div>
+        	<div data-role="footer">
+        		<h1 align="center">IU All Rights Reserved 2016</h1>
+        	</div>
+        </div>  
+        <div id="update" data-role="page">
+        	<div data-role="panel" id="navpanel4" data-display="overlay">
+    			<ul data-role="listview">
+    				<li><a href="#home">Home</a></li>
+    				<li><a href="#view">View</a></li>
+    				<li><a href="#add">Add</a></li>
+    			</ul>        			
+			</div>         	
+        	<div data-role="header">
+        		<a href="#navpanel4">Application Menu</a> <h1 align="center">My To Do Application</h1>
+        	</div>
+        	<div role="main" class="ui-content">
+        		<input type="hidden" id="timestamp2" />
+				<label for="todo">To Do:</label>
+				<input id="todo2" type="text">
+				<button class="ui-shadow ui-btn ui-corner-all" onclick="updatetodo()">Update</button>
+        	</div>
+        	<div data-role="footer">
+        		<h1 align="center">IU All Rights Reserved 2016</h1>
+        	</div>
+        </div>                
+    </body>
+</html>
